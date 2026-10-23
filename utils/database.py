@@ -82,17 +82,17 @@ class DatabaseUtil:
     
 
 
-obj = DatabaseUtil({
-         "host": "localhost",
-         "port": 5432,
-         "dbname": "dataagent_db",
-         "user": "postgres",
-         "password": "talktime"
+if __name__ == "__main__":
+    obj = DatabaseUtil({
+        "host": "localhost",
+        "port": 5432,
+        "dbname": "dataagent_db",
+        "user": "postgres",
+        "password": "talktime"
     })
 
-result = obj.schema_details("public")
-with open("test_schema_details.txt", "w") as f:
-    f.write(result)
+    result = obj.schema_details("public")
+    print(result)
     
     
 
