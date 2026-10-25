@@ -16,9 +16,13 @@ def curate_ques(state: AgentSchema) -> AgentSchema:
     llm = pick_llm(level="low")
     
     response = llm.invoke(f"Curate the following question: {user_question}").content
-    state.curated_ques = response
-    state.messages = state.messages+ [HumanMessage(content=f"{response}")]
-    return state
+    # state.curated_ques = response
+    # state.messages = state.messages+ [HumanMessage(content=f"{response}")]
+    # return state
+    return {
+        "curated_ques": response,
+        "messages": [HumanMessage(content=str(response))]
+    }
 
 
 def prompt_query_context(state: AgentSchema) -> AgentSchema:
@@ -107,12 +111,21 @@ def is_safe_sql(state: AgentSchema) -> AgentSchema:
 
 
 def canceled_sql(state:AgentSchema)->AgentSchema:
-    comments = state.comments
+    # comments = state.comments
 
-    state.final_answer = f"The generated SQL query was deemed unsafe to execute. The reason provided by the judge is: {comments}.Therefore, the SQL query will not be executed."
-    state.messages = state.messages + [AIMessage(content=f"{state.final_answer}")]
+    # state.final_answer = f"The generated SQL query was deemed unsafe to execute. The reason provided by the judge is: {comments}.Therefore, the SQL query will not be executed."
+    # state.messages = state.messages + [AIMessage(content=f"{state.final_answer}")]
 
-    return state
+    # return state
+    final_answer = (
+        "The generated SQL query was deemed unsafe to execute. "
+        f"Reason: {state.comments}. Therefore, the query will not be executed."
+    )
+
+    return {
+        "final_answer": final_answer,
+        "messages": [AIMessage(content=final_answer)]
+    }
 
 
 def execute_sql(state: AgentSchema) -> AgentSchema:
@@ -154,10 +167,14 @@ def represent_final_answer(state:AgentSchema) -> AgentSchema:
 
     llm_response = llm.invoke(prompt).content  # Get the final answer from the LLM
 
-    state.final_answer = llm_response
-    state.messages = state.messages + [AIMessage(content=f"{llm_response}")]  # Append the final answer to the messages list
+    # state.final_answer = llm_response
+    # state.messages = state.messages + [AIMessage(content=f"{llm_response}")]  # Append the final answer to the messages list
 
-    return state
+    # return state
+    return {
+    "final_answer": llm_response,
+    "messages": [AIMessage(content=str(llm_response))]
+}
 
 
 sql_agent_graph = StateGraph(AgentSchema)

@@ -1,3 +1,4 @@
+from groq.types import model
 import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -20,14 +21,12 @@ def pick_llm(level: str):
     if level == "low":
         llm = ChatGroq(
             model="openai/gpt-oss-20b",
-            temperature=0,
             api_key=os.getenv("GROQ_API_KEY"),
         )
 
     elif level == "medium":
         llm = ChatGoogleGenerativeAI(
             model="gemini-3.1-flash-lite",
-            temperature=0,
             google_api_key=os.getenv("GEMINI_API_KEY"),
         )
 
@@ -36,7 +35,11 @@ def pick_llm(level: str):
             model="openrouter/free",
             base_url="https://openrouter.ai/api/v1",
             api_key=os.getenv("OPENROUTER_API_KEY"),
-            temperature=0,
+        )
+    elif level == "gemini":
+        llm = ChatGoogleGenerativeAI(
+            model = "gemini-3.6-flash",
+            google_api_key=os.getenv("GEMINI_API_KEY"),
         )
 
     else:

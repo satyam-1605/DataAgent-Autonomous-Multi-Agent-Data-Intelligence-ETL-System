@@ -84,13 +84,12 @@ class DatabaseUtil:
 
 if __name__ == "__main__":
     obj = DatabaseUtil({
-        "host": "localhost",
-        "port": 5432,
-        "dbname": "dataagent_db",
-        "user": "postgres",
-        "password": "talktime"
-    })
-
+    "host": os.getenv("host"),
+    "port": int(os.getenv("port", "5432")),
+    "dbname": os.getenv("database"),
+    "user": os.getenv("user"),
+    "password": os.getenv("password")
+})
     result = obj.schema_details("public")
     print(result)
     
